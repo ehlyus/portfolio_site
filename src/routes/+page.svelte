@@ -1,9 +1,9 @@
 <script lang="ts">
 // @ts-nocheck
     import { onMount } from "svelte";
-    import gsap from "gsap-trial/dist/gsap";
-    import ScrollTrigger from "gsap-trial/dist/ScrollTrigger";
-    import ScrollSmoother from "gsap-trial/dist/ScrollSmoother";
+    import { gsap } from "gsap";
+    import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+    import { ScrollSmoother } from "gsap/dist/ScrollSmoother";
     
     /**
      * @type {globalThis.ScrollSmoother}
