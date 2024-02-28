@@ -2,6 +2,8 @@
 
 This is the code base for Elijah's portfolio site. If using this project as a template please fork and give credit. Thank you.
 
+Please Note; in order to access gsap club plugins, you will need to modify all club plugin imports to utilize the gsap trial library or purchase access to club plugins and add an npmrc to the project with your club plugin token.
+
 ## Developing
 
 Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
