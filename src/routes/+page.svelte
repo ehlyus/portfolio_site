@@ -34,14 +34,14 @@
 </script>
     
 <svelte:head>
-    <title>Home</title>
+    <title>Elijah Johnson - Personal Website</title>
     <meta name="description" content="Svelte demo app" />
 </svelte:head>
 
 <div id="smooth-wrapper" bind:this={main}>
     <div id="smooth-content">
     <header class="header">
-        <h1 class="title">GreenSock ScrollSmoother on a Svelte App</h1>
+        <h1 class="title">Elijah Johnson's Portfolio</h1>
         <button class="button" on:click={scrollTo}> Jump to C </button>
     </header>
     <div class="box box-a" data-speed="0.5">a</div>
@@ -51,14 +51,6 @@
     </div>
 </div>
 <footer>
-    <a href="https://greensock.com/scrollsmoother">
-    <img
-        class="greensock-icon"
-        src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/scroll-smoother-logo-light.svg"
-        width="220"
-        height="70"
-        alt="GreenSock"
-    />
-    </a>
+
 </footer>
     
