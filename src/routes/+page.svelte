@@ -23,7 +23,7 @@
                 trigger: ".box-c",
                 pin: true,
                 start: "center center",
-                end: "+=300",
+                end: "+=1000",
                 markers: true,
             });
         }, main); // <- Scope!
@@ -43,9 +43,9 @@
             <h1 class="title">Elijah Johnson's Personal Website</h1>
             <button class="button" on:click={scrollTo}> Jump to C</button>
         </header>
-        <div class="box box-a" data-speed="0.5">a</div>
-        <div class="box box-b" data-speed="0.8">b</div>
-        <div class="box box-c" data-speed="1.5">c</div>
+        <div class="box box-a" data-speed="1">a</div>
+        <div class="box box-b" data-speed="1">b</div>
+        <div class="box box-c" data-speed="1">c</div>
         <div class="line"/>
     </div>
 </div>
