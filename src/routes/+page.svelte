@@ -40,7 +40,7 @@
 <div id="smooth-wrapper" bind:this={main}>
     <div id="smooth-content">
         <header class="header">
-            <h1 class="title">Elijah Johnson's Portfolio</h1>
+            <h1 class="title">Elijah Johnson's Personal Website</h1>
             <button class="button" on:click={scrollTo}> Jump to C</button>
         </header>
         <div class="box box-a" data-speed="0.5">a</div>
