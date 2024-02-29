@@ -16,7 +16,7 @@
     onMount(() => {
         const ctx = gsap.context(() => {
             smoother = ScrollSmoother.create({
-                smooth: 2, // seconds it takes to "catch up" to native scroll position
+                smooth: 2.5, // seconds it takes to "catch up" to native scroll position
                 effects: true, // look for data-speed and data-lag attributes on elements and animate accordingly
             });
             ScrollTrigger.create({
