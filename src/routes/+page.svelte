@@ -27,7 +27,7 @@
                 markers: true,
             });
         }, main); // <- Scope!
-        
+
         return () => ctx.revert(); // <- Cleanup!
     });
 </script>
