@@ -40,6 +40,12 @@
                 end: "+=1000",
                 markers: true,
             });
+            gsap.from('.title', {
+                opacity: 0,
+                y: -50,
+                duration: 1,
+                delay: 0.5
+            });
 
         }, main); // <- Scope!
 
@@ -49,7 +55,7 @@
 
 <svelte:head>
     <title>Elijah Johnson - Personal Website</title>
-    <meta name="description" content="Svelte demo app"/>
+    <meta name="description" content="Svelte portfolio site"/>
 </svelte:head>
 
 <div id="smooth-wrapper" bind:this={main}>
