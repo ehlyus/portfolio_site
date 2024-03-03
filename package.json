@@ -22,6 +22,7 @@
 	"type": "module",
 	"dependencies": {
 		"gsap": "npm:@gsap/shockingly@^3.12.5",
-		"gsap-trial": "^3.12.5"
+		"gsap-trial": "^3.12.5",
+		"three": "^0.162.0"
 	}
 }
