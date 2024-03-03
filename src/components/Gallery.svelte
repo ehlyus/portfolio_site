@@ -18,9 +18,10 @@
     onMount(() => {
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xffffff); // Set white background
         camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
         renderer.toneMapping = THREE.ReinhardToneMapping; // Adjust tone mapping algorithm
-        renderer.toneMappingExposure = 2; // Adjust exposure value
+        renderer.toneMappingExposure = 3; // Increase exposure for brighter scene
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio( window.devicePixelRatio );
 
@@ -39,13 +40,34 @@
             console.error( error );
         } );
 
-        // Create orb geometry and material
-        const orbGeometry = new THREE.SphereGeometry(0.2, 32, 32);
-        const orbMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red color for the orb
+        // Add ambient light to brighten up the scene
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Increase intensity to brighten the scene
+        scene.add(ambientLight);
 
-        // Create orb mesh
-        const controlOrb = new THREE.Mesh(orbGeometry, orbMaterial);
-        scene.add(controlOrb); // Add orb to the scene
+        // Add directional light to simulate sunlight from above
+        const sunlight = new THREE.DirectionalLight(0xffffff, 5); // Increased intensity to 5
+        sunlight.position.set(0, 1, 0); // Set position above the scene
+        sunlight.castShadow = true; // Enable shadow casting
+        scene.add(sunlight);
+
+        // Set up shadow properties for the light
+        sunlight.shadow.mapSize.width = 8192; // Increase shadow map size for higher quality
+        sunlight.shadow.mapSize.height = 8192;
+        sunlight.shadow.camera.near = 0.5; // Near plane of the shadow camera
+        sunlight.shadow.camera.far = 100; // Far plane of the shadow camera
+
+        // Set up shadow camera parameters for better quality
+        sunlight.shadow.camera.left = -40;
+        sunlight.shadow.camera.right = 40;
+        sunlight.shadow.camera.top = 40;
+        sunlight.shadow.camera.bottom = -40;
+
+        // Set shadow bias to reduce self-shadowing artifacts
+        sunlight.shadow.bias = -0.0005;
+
+        // Enable shadow receiving for objects
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows for smoother appearance
 
         // Animation loop
         const animate = () => {
@@ -71,8 +93,8 @@
 </script>
 
 <div class="gallery-container" bind:this={galleryContainer}>
-    <p style="color: red">Camera Position: { positionToString(cameraPosition) }</p>
-    <p style="color: red">Target Position: {positionToString(targetPosition) }</p>
+    <p style="color: white; float: left;"> Target Position: <span style="color: red;">{positionToString(targetPosition)} |</span></p>
+    <p style="color: white; float: left;"> Camera Position: <span style="color: red;"> {positionToString(cameraPosition)}</span></p>
 </div>
 
 <style>
