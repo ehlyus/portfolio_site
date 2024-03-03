@@ -16,10 +16,14 @@
     };
 
     onMount(() => {
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
         const scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 10000 );
+        renderer.toneMapping = THREE.ReinhardToneMapping; // Adjust tone mapping algorithm
+        renderer.toneMappingExposure = 2; // Adjust exposure value
         renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio( window.devicePixelRatio );
+
         galleryContainer.appendChild(renderer.domElement);
 
         controls = new OrbitControls(camera, renderer.domElement);
@@ -43,7 +47,6 @@
         const controlOrb = new THREE.Mesh(orbGeometry, orbMaterial);
         scene.add(controlOrb); // Add orb to the scene
 
-
         // Animation loop
         const animate = () => {
             requestAnimationFrame(animate);
@@ -55,6 +58,10 @@
 
             // Position the orb at the controls target
             // controlOrb.position.copy(controls.target);
+
+            renderer.setSize(window.innerWidth, window.innerHeight); // Adjust renderer size based on window size
+            camera.aspect = window.innerWidth / window.innerHeight; // Adjust camera aspect ratio
+            camera.updateProjectionMatrix(); // Update camera projection matrix
 
             renderer.render(scene, camera);
         };
