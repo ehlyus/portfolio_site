@@ -11,3 +11,4 @@ vite.config.ts.timestamp-*
 /.npmrc
 /.idea
 .npmrc
+/src/assets/*
