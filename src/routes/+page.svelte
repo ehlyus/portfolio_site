@@ -5,12 +5,11 @@
 
 <div id="smooth-wrapper" bind:this={main}>
     <div id="smooth-content">
-        <header class="header">
-            <h1 class="title">Elijah Johnson's Personal Website</h1>
-        </header>
-        <div class="box box-a" data-speed="1"></div>
-        <div class="line"/>
+        <Room roomName="Patio" />
+        <Room roomName="RoomA  " />
+        <Room roomName="RoomB" />
     </div>
+
 </div>
 <footer>
 
@@ -20,6 +19,7 @@
     import {onMount} from "svelte";
     import {gsap} from "gsap";
     import {ScrollTrigger} from "gsap/dist/ScrollTrigger";
+    import Room from '../components/Room.svelte';
     import {ScrollSmoother} from "gsap/dist/ScrollSmoother";
 
     /**
@@ -28,24 +28,31 @@
     let main: any, smoother: ScrollSmoother;
 
     const scrollTo = () => {
-        smoother && smoother.scrollTo(".box-c", true, "center center");
+        smoother
     };
 
     onMount(() => {
         const ctx = gsap.context(() => {
             smoother = ScrollSmoother.create({
-                smooth: 2.5, // seconds it takes to "catch up" to native scroll position
+                smooth: 2, // seconds it takes to "catch up" to native scroll position
                 effects: true, // look for data-speed and data-lag attributes on elements and animate accordingly
-            });
-            ScrollTrigger.create({
-                trigger: ".box-a",
-                pin: true,
-                start: "bottom center",
-                end: "+=1000",
-                markers: true,
             });
 
         }, main); // <- Scope!
+        const rooms = document.querySelectorAll('.room');
+
+        rooms.forEach((room, index) => {
+            gsap.to(room, {
+                opacity: 0,
+                scrollTrigger: {
+                    trigger: room,
+                    start: 'top bottom', // Animation starts when the top of the room hits the bottom of the viewport
+                    end: 'bottom top', // Animation ends when the bottom of the room hits the top of the viewport
+                    scrub: true // Smooth animation while scrolling
+                }
+            });
+        });
+
         return () => ctx.revert(); // <- Cleanup!
     });
 </script>
