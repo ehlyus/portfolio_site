@@ -5,11 +5,7 @@
 
 <div id="smooth-wrapper" bind:this={main}>
     <div id="smooth-content">
-        <Room roomName="Patio" />
-        <Room roomName="RoomA  " />
-        <Room roomName="RoomB" />
     </div>
-
 </div>
 <footer>
 
@@ -19,7 +15,6 @@
     import {onMount} from "svelte";
     import {gsap} from "gsap";
     import {ScrollTrigger} from "gsap/dist/ScrollTrigger";
-    import Room from '../components/Room.svelte';
     import {ScrollSmoother} from "gsap/dist/ScrollSmoother";
 
     /**
@@ -39,19 +34,6 @@
             });
 
         }, main); // <- Scope!
-        const rooms = document.querySelectorAll('.room');
-
-        rooms.forEach((room, index) => {
-            gsap.to(room, {
-                opacity: 0,
-                scrollTrigger: {
-                    trigger: room,
-                    start: 'top bottom', // Animation starts when the top of the room hits the bottom of the viewport
-                    end: 'bottom top', // Animation ends when the bottom of the room hits the top of the viewport
-                    scrub: true // Smooth animation while scrolling
-                }
-            });
-        });
 
         return () => ctx.revert(); // <- Cleanup!
     });
