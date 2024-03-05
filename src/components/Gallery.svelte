@@ -29,24 +29,24 @@
             rayleigh: 3,
             mieCoefficient: 0.005,
             mieDirectionalG: 0.7,
-            elevation: 2,
+            elevation: 12.6, // Adjust sun's elevation
             azimuth: 180,
-            exposure: renderer.toneMappingExposure
+            exposure: 1.0
         };
 
         function guiChanged() {
             const uniforms = sky.material.uniforms;
-            uniforms[ 'turbidity' ].value = effectController.turbidity;
-            uniforms[ 'rayleigh' ].value = effectController.rayleigh;
-            uniforms[ 'mieCoefficient' ].value = effectController.mieCoefficient;
-            uniforms[ 'mieDirectionalG' ].value = effectController.mieDirectionalG;
+            uniforms.turbidity.value = effectController.turbidity;
+            uniforms.rayleigh.value = effectController.rayleigh;
+            uniforms.mieCoefficient.value = effectController.mieCoefficient;
+            uniforms.mieDirectionalG.value = effectController.mieDirectionalG;
 
             const phi = THREE.MathUtils.degToRad( 90 - effectController.elevation );
             const theta = THREE.MathUtils.degToRad( effectController.azimuth );
 
             sun.setFromSphericalCoords( 1, phi, theta );
 
-            uniforms[ 'sunPosition' ].value.copy( sun );
+            uniforms.sunPosition.value.copy( sun );
 
             renderer.toneMappingExposure = effectController.exposure;
             renderer.render( scene, camera );
@@ -68,8 +68,6 @@
     onMount(() => {
         renderer = new THREE.WebGLRenderer({ antialias: true });
         scene = new THREE.Scene();
-        const helper = new THREE.GridHelper( 10000, 2, 0xffffff, 0xffffff );
-        scene.add( helper );
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
         renderer.toneMapping = THREE.ReinhardToneMapping;
         renderer.toneMappingExposure = 3;
@@ -84,17 +82,45 @@
         controls.update();
 
         const loader = new GLTFLoader();
+// Define an array of node names to exclude from casting shadows
+        const exclusionArray = ["suspended structure",
+            "cilling_cable", "Mesh001", "Mesh001_1", "Mesh002", "Mesh002_1", "Mesh002_2", "Mesh003", "Mesh003_1", "Mesh004"];
+
         loader.load('src/assets/untitled.glb', (gltf) => {
             scene.add(gltf.scene);
+
+            // Improve lighting
+            gltf.scene.traverse(node => {
+                if (node.isMesh && !exclusionArray.includes(node.name)) { // Check if the node is a Mesh and not in the exclusion array
+                    // Enable soft shadows
+                    node.castShadow = true;
+                    node.receiveShadow = true;
+                }
+            });
         }, undefined, function (error) {
             console.error('Error loading GLB file:', error);
         });
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Adjust ambient light intensity
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 5);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1); // Adjust directional light intensity
+        dirLight.position.set(10, 10, 10); // Adjust light position
+        dirLight.castShadow = true; // Enable shadow casting
         scene.add(dirLight);
+
+        // Set up shadow properties
+        dirLight.shadow.mapSize.width = 2048; // Increase shadow map resolution
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.far = 50;
+
+        // Enable ambient occlusion
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soften shadow edges
 
         initSky();
 
