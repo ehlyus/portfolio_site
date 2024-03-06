@@ -1,4 +1,4 @@
-# Elijah's Portfolio Site
+# Elijah's Personal Site
 
 This is the code base for Elijah's portfolio site. If using this project as a template please fork and give credit. Thank you.
 
