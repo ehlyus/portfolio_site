@@ -29,8 +29,8 @@
             rayleigh: 3,
             mieCoefficient: 0.005,
             mieDirectionalG: 0.7,
-            elevation: 12.6, // Adjust sun's elevation
-            azimuth: 180,
+            elevation: 19, // Adjust sun's elevation
+            azimuth: 39,
             exposure: 1.0
         };
 
@@ -60,13 +60,13 @@
         gui.add( effectController, 'mieDirectionalG', 0.0, 1, 0.001 ).onChange( guiChanged );
         gui.add( effectController, 'elevation', 0, 90, 0.1 ).onChange( guiChanged );
         gui.add( effectController, 'azimuth', - 180, 180, 0.1 ).onChange( guiChanged );
-        gui.add( effectController, 'exposure', 0, 1, 0.0001 ).onChange( guiChanged );
+        gui.add( effectController, 'exposure', 0, 2, 0.0001 ).onChange( guiChanged ); // Adjusted maximum exposure
 
         guiChanged();
     }
 
     onMount(() => {
-        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer = new THREE.WebGLRenderer({ antialias: true }); // Enable anti-aliasing
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
         renderer.toneMapping = THREE.ReinhardToneMapping;
@@ -77,32 +77,36 @@
         galleryContainer.appendChild(renderer.domElement);
 
         controls = new OrbitControls(camera, renderer.domElement);
-        camera.position.set(3.66, 0.83, 14.38);
+        camera.position.set( 3.98, 4.07, 11.79);
         controls.target.set(0.34, 2.56, -0.37);
         controls.update();
 
         const loader = new GLTFLoader();
 // Define an array of node names to exclude from casting shadows
-        const exclusionArray = ["suspended structure",
-            "cilling_cable", "Mesh001", "Mesh001_1", "Mesh002", "Mesh002_1", "Mesh002_2", "Mesh003", "Mesh003_1", "Mesh004"];
+        const exclusionArray = [
+            // "Scene",
+            // "statue",
+            // "Mesh026",
+            // "Object",
+            // "Mesh030",
+            // "Mesh030_1",
+            // "Mesh030_2",
+        ];
+
 
         loader.load('src/assets/untitled.glb', (gltf) => {
             scene.add(gltf.scene);
 
             // Improve lighting
             gltf.scene.traverse(node => {
-                if (node.isMesh && !exclusionArray.includes(node.name)) { // Check if the node is a Mesh and not in the exclusion array
-                    // Enable soft shadows
-                    node.castShadow = true;
-                    node.receiveShadow = true;
-                }
+                // console.log(node.name)
             });
         }, undefined, function (error) {
             console.error('Error loading GLB file:', error);
         });
 
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Adjust ambient light intensity
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Increased ambient light intensity
         scene.add(ambientLight);
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 1); // Adjust directional light intensity
