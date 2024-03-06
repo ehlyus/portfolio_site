@@ -25,13 +25,13 @@
         sun = new THREE.Vector3();
 
         const effectController = {
-            turbidity: 10,
-            rayleigh: 3,
+            turbidity: 2.3,
+            rayleigh: 1.1,
             mieCoefficient: 0.005,
             mieDirectionalG: 0.7,
-            elevation: 19, // Adjust sun's elevation
+            elevation: 8, // Adjust sun's elevation
             azimuth: 39,
-            exposure: 1.0
+            exposure: 2
         };
 
         function guiChanged() {
@@ -94,31 +94,30 @@
         ];
 
 
-        loader.load('src/assets/untitled.glb', (gltf) => {
-            scene.add(gltf.scene);
-
-            // Improve lighting
-            gltf.scene.traverse(node => {
-                // console.log(node.name)
-            });
+        loader.load('src/assets/untitled.glb', (model) => {
+            scene.add(model.scene);
         }, undefined, function (error) {
             console.error('Error loading GLB file:', error);
         });
+        console.log(scene)
 
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2); // Increased ambient light intensity
+        // Increase ambient light intensity
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
         scene.add(ambientLight);
 
-        const dirLight = new THREE.DirectionalLight(0xffffff, 1); // Adjust directional light intensity
-        dirLight.position.set(10, 10, 10); // Adjust light position
-        dirLight.castShadow = true; // Enable shadow casting
+        // Adjust directional light intensity and position
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+        dirLight.position.set(5, 10, 5);
+        dirLight.castShadow = true;
         scene.add(dirLight);
 
-        // Set up shadow properties
-        dirLight.shadow.mapSize.width = 2048; // Increase shadow map resolution
+        // Set up shadow properties for directional light
+        dirLight.shadow.mapSize.width = 2048;
         dirLight.shadow.mapSize.height = 2048;
-        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.near = 0.1;
         dirLight.shadow.camera.far = 50;
+
+        // Change shadow map type for smoother shadows
 
         // Enable ambient occlusion
         renderer.setPixelRatio(window.devicePixelRatio);
