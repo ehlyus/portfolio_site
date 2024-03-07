@@ -74,16 +74,12 @@
             const uiCanvas = document.getElementById('ui-canvas');
 
             if (uiCanvas) {
-                const uiContext = uiCanvas.getContext('2d');
 
                 uiCanvas.style.position = 'absolute';
                 uiCanvas.style.left = x + 'px';
                 uiCanvas.style.top = y + 'px';
                 uiCanvas.width = tvScreenWidth * window.innerWidth;
                 uiCanvas.height = tvScreenHeight * window.innerHeight;
-
-                uiContext.fillStyle = 'red';
-                uiContext.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
 
                 initialized = true;
             }
@@ -182,7 +178,9 @@
 
 <div class="gallery-container" bind:this={galleryContainer}>
     {#if displayInView}
-        <canvas id="ui-canvas"></canvas>
+        <div id="ui-canvas">
+            <p> perfect :)</p>
+        </div>
     {/if}
     <p style="color: white; float: left;"> Camera Position: <span
             style="color: red;"> {positionToString(cameraPosition)}</span></p>
@@ -197,6 +195,7 @@
 
     #ui-canvas {
         display: block;
+        background: grey;
         position: absolute !important;
         top: 103px !important;
         left: 173.5px !important;
