@@ -2,17 +2,21 @@
     // @ts-nocheck
     import { onMount } from 'svelte';
     import * as THREE from 'three';
-    import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+    // import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
     import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
     import { Sky } from "three/examples/jsm/objects/Sky";
     import GUI from "three/examples/jsm/libs/lil-gui.module.min";
+    import { gsap } from 'gsap';
+    import {FirstPersonControls} from "three/examples/jsm/controls/FirstPersonControls";
+    import {Clock} from "three";
 
     let galleryContainer;
     let cameraPosition = { x: 0, y: 0, z: 0 };
-    let targetPosition = { x: 0, y: 0, z: 0 };
+    const clock = new Clock()
+    // let targetPosition = { x: 0, y: 0, z: 0 };
     let camera, scene, renderer;
     let sky, sun;
-    let controls;
+    // let controls;
     const positionToString = (position) => {
         return `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}`;
     };
@@ -76,26 +80,31 @@
 
         galleryContainer.appendChild(renderer.domElement);
 
-        controls = new OrbitControls(camera, renderer.domElement);
+        // controls = new OrbitControls(camera, renderer.domElement);
         camera.position.set( 3.98, 4.07, 11.79);
-        controls.target.set(0.34, 2.56, -0.37);
-        controls.update();
+        // controls.target.set(0.34, 2.56, -0.37);
+        // controls.update();
+        // const controls = new FirstPersonControls(camera, renderer.domElement);
+        // controls.movementSpeed = 8;
+        // controls.lookSpeed = 0.08;
 
         const loader = new GLTFLoader();
-// Define an array of node names to exclude from casting shadows
-        const exclusionArray = [
-            // "Scene",
-            // "statue",
-            // "Mesh026",
-            // "Object",
-            // "Mesh030",
-            // "Mesh030_1",
-            // "Mesh030_2",
-        ];
-
-
         loader.load('src/assets/untitled.glb', (model) => {
+            // Add the model to the scene
             scene.add(model.scene);
+            window.addEventListener('mouseup', () => {
+                // console.log(camera.position);
+                gsap.to(camera.position, {
+                    x: -4.5, y: 1.439498279696612, z: 7.5,
+                    duration: 3
+                });
+                gsap.to(camera.rotation, {
+                    x: 0,
+                    y: -.62,
+                    z: 0,
+                    duration: 3.3
+                })
+            });
         }, undefined, function (error) {
             console.error('Error loading GLB file:', error);
         });
@@ -129,14 +138,12 @@
 
         const animate = () => {
             requestAnimationFrame(animate);
-            controls.update();
             cameraPosition = camera.position.clone();
-            targetPosition = controls.target.clone();
             renderer.render(scene, camera);
+            // controls.update(clock.getDelta());
         };
 
         animate();
-
         const handleResize = () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
@@ -152,8 +159,11 @@
 </script>
 
 <div class="gallery-container" bind:this={galleryContainer}>
-    <p style="color: white; float: left;"> Target Position: <span style="color: red;">{positionToString(targetPosition)} |</span></p>
+    <!--    <p style="color: white; float: left;"> Target Position: <span style="color: red;">{positionToString(targetPosition)} |</span></p>-->
     <p style="color: white; float: left;"> Camera Position: <span style="color: red;"> {positionToString(cameraPosition)}</span></p>
+    <!-- HTML markup -->
+    <button id="animateButton">Animate Suspended Structure</button>
+
 </div>
 
 <style>
