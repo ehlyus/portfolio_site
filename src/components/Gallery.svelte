@@ -13,6 +13,10 @@
     let sky, sun;
     let tvUi;
     const clock = new THREE.Clock();
+    let displayInView = false;
+    let initialized = false;
+    let tvScreenPosition, tvScreenWidth, tvScreenHeight; // Initialize here
+
     const positionToString = (position) => {
         return `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}`;
     };
@@ -54,15 +58,68 @@
 
         const gui = new GUI();
 
-        gui.add(effectController, 'turbidity', 0.0, 20.0, 0.1).onChange(guiChanged);
-        gui.add(effectController, 'rayleigh', 0.0, 4, 0.001).onChange(guiChanged);
-        gui.add(effectController, 'mieCoefficient', 0.0, 0.1, 0.001).onChange(guiChanged);
-        gui.add(effectController, 'mieDirectionalG', 0.0, 1, 0.001).onChange(guiChanged);
-        gui.add(effectController, 'elevation', 0, 90, 0.1).onChange(guiChanged);
-        gui.add(effectController, 'azimuth', -180, 180, 0.1).onChange(guiChanged);
-        gui.add(effectController, 'exposure', 0, 2, 0.0001).onChange(guiChanged);
+        for (const key in effectController) {
+            gui.add(effectController, key).onChange(guiChanged);
+        }
 
         guiChanged();
+    }
+
+    function positionCanvasOverTv() {
+        if (tvUi && !initialized) {
+            const tvScreenPositionCSS = tvScreenPosition.project(camera);
+            const x = (tvScreenPositionCSS.x + 1) / 2 * window.innerWidth;
+            const y = (-tvScreenPositionCSS.y + 1) / 2 * window.innerHeight;
+
+            const uiCanvas = document.getElementById('ui-canvas');
+
+            if (uiCanvas) {
+                const uiContext = uiCanvas.getContext('2d');
+
+                uiCanvas.style.position = 'absolute';
+                uiCanvas.style.left = x + 'px';
+                uiCanvas.style.top = y + 'px';
+                uiCanvas.width = tvScreenWidth * window.innerWidth;
+                uiCanvas.height = tvScreenHeight * window.innerHeight;
+
+                uiContext.fillStyle = 'red';
+                uiContext.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
+
+                initialized = true;
+            }
+        }
+    }
+
+
+    function animate() {
+        requestAnimationFrame(animate);
+        cameraPosition = camera.position.clone();
+        displayInView = camera.position.x === -4.57 && camera.position.y === 1.40 && camera.position.z === 7.20;
+        positionCanvasOverTv();
+        renderer.render(scene, camera);
+    }
+
+    function handleResize() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function modelLoadedCallback() {
+        setTimeout(() => {
+            gsap.to(camera.position, {
+                x: -4.57,
+                y: 1.40,
+                z: 7.2,
+                duration: 2.7
+            });
+            gsap.to(camera.rotation, {
+                x: 0,
+                y: -.62,
+                z: 0,
+                duration: 2.75
+            })
+        }, 650)
     }
 
     onMount(() => {
@@ -73,6 +130,7 @@
         renderer.toneMappingExposure = 3;
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
+        displayInView = true;
 
         galleryContainer.appendChild(renderer.domElement);
 
@@ -81,39 +139,16 @@
         const loader = new GLTFLoader();
         loader.load('src/assets/untitled.glb', (model) => {
             scene.add(model.scene);
-            console.log(model.scene)
-            tvUi = model.scene.children.filter(child => child.name === "SM_tv_screen_led_")[0];
-            console.log(tvUi);
+            tvUi = model.scene.children.find(child => child.name === "SM_tv_screen_led_");
 
-// Get the position and dimensions of the TV screen
-            const tvScreenPosition = tvUi.position.clone();
-            const tvScreenWidth = tvUi.scale.x;
-            const tvScreenHeight = tvUi.scale.y;
+            tvScreenPosition = tvUi.position.clone();
+            tvScreenWidth = tvUi.scale.x;
+            tvScreenHeight = tvUi.scale.y;
 
-// Position the UI canvas over the TV screen
-            const uiCanvas = document.getElementById('ui-canvas');
-            const uiContext = uiCanvas.getContext('2d');
-
-// Calculate the position of the TV screen in CSS coordinates
-            const tvScreenPositionCSS = tvScreenPosition.project(camera);
-            const x = (tvScreenPositionCSS.x + 1) / 2 * window.innerWidth;
-            const y = (-tvScreenPositionCSS.y + 1) / 2 * window.innerHeight;
-
-// Position the canvas over the TV screen
-            uiCanvas.style.position = 'absolute';
-            uiCanvas.style.left = x + 'px';
-            uiCanvas.style.top = y + 'px';
-            uiCanvas.width = tvScreenWidth * window.innerWidth; // Set canvas width to match TV screen width
-            uiCanvas.height = tvScreenHeight * window.innerHeight; // Set canvas height to match TV screen height
-
-// Example:
-            uiContext.fillStyle = 'red';
-            uiContext.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
             modelLoadedCallback();
         }, undefined, function (error) {
             console.error('Error loading GLB file:', error);
         });
-
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
         scene.add(ambientLight);
@@ -135,40 +170,7 @@
 
         initSky();
 
-        const animate = () => {
-            requestAnimationFrame(animate);
-            cameraPosition = camera.position.clone();
-            renderer.render(scene, camera);
-        };
-
         animate();
-
-        const handleResize = () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        };
-
-        const modelLoadedCallback = () => {
-            setTimeout(() => {
-                gsap.to(camera.position, {
-                    x: -4.57,
-                    y: 1.40,
-                    z: 7.2,
-                    duration: 2.7
-                });
-                gsap.to(camera.rotation, {
-                    x: 0,
-                    y: -.62,
-                    z: 0,
-                    duration: 2.75
-                })
-                setTimeout(() => {
-                        document.getElementById('ui-canvas').style.display = 'block';
-                    },
-                    2800)
-            }, 650)
-        }
 
         window.addEventListener('resize', handleResize);
 
@@ -179,7 +181,9 @@
 </script>
 
 <div class="gallery-container" bind:this={galleryContainer}>
-    <canvas id="ui-canvas"></canvas>
+    {#if displayInView}
+        <canvas id="ui-canvas"></canvas>
+    {/if}
     <p style="color: white; float: left;"> Camera Position: <span
             style="color: red;"> {positionToString(cameraPosition)}</span></p>
 </div>
@@ -192,12 +196,11 @@
     }
 
     #ui-canvas {
-        display: none;
+        display: block;
         position: absolute !important;
         top: 103px !important;
-        left: 48px !important;
+        left: 173.5px !important;
         width: 1152px !important;
         height: 695px !important;
     }
 </style>
-
