@@ -123,16 +123,16 @@
         const modelLoadedCallback = () => {
             setTimeout(() => {
                 gsap.to(camera.position, {
-                    x: -4.5,
-                    y: 1.35,
-                    z: 7.5,
-                    duration: 3
+                    x: -4.57,
+                    y: 1.40,
+                    z: 7.2,
+                    duration: 2.7
                 });
                 gsap.to(camera.rotation, {
                     x: 0,
                     y: -.62,
                     z: 0,
-                    duration: 3.1
+                    duration: 2.75
                 })
             }, 650)
         }
