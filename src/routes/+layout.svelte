@@ -3,8 +3,7 @@
   import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
   import { ScrollSmoother } from "gsap/dist/ScrollSmoother";
   import { DrawSVGPlugin } from "gsap/dist/DrawSVGPlugin";
-  import './styles.css';
-	
+  import "../app.pcss";
   if (typeof window !== "undefined") {
     gsap.registerPlugin(ScrollTrigger, ScrollSmoother, DrawSVGPlugin);
   }
@@ -12,6 +11,6 @@
 
 <div class="app">
 	<main>
-		<slot />
+		<slot></slot>
 	</main>
 </div>
