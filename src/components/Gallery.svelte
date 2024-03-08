@@ -6,17 +6,15 @@
     import {Sky} from "three/examples/jsm/objects/Sky";
     import GUI from "three/examples/jsm/libs/lil-gui.module.min";
     import {gsap} from 'gsap';
+    import {FirstPersonControls} from "three/examples/jsm/controls/FirstPersonControls";
 
     let galleryContainer;
     let cameraPosition = {x: 0, y: 0, z: 0};
-    let camera, scene, renderer;
+    let camera, scene, renderer, controls;
     let sky, sun;
     let tvUi;
     const clock = new THREE.Clock();
     let displayInView = false;
-    let initialized = false;
-    let tvScreenPosition, tvScreenWidth, tvScreenHeight; // Initialize here
-
     const positionToString = (position) => {
         return `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}`;
     };
@@ -56,21 +54,7 @@
             renderer.render(scene, camera);
         }
 
-        // const gui = new GUI();
-        //
-        // for (const key in effectController) {
-        //     gui.add(effectController, key).onChange(guiChanged);
-        // }
-
         guiChanged();
-    }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        cameraPosition = camera.position.clone();
-        displayInView = camera.position.x === -4.53 && camera.position.y === 1.45 && camera.position.z === 7.1;
-        console.log(cameraPosition)
-        renderer.render(scene, camera);
     }
 
     function handleResize() {
@@ -82,18 +66,28 @@
     function modelLoadedCallback() {
         setTimeout(() => {
             gsap.to(camera.position, {
-                x: -4.53,
-                y: 1.45,
-                z: 7.1,
-                duration: 2.7
+                x: -4.47,
+                y: 1.435,
+                z: 7.06,
+                duration: 2.2
             });
             gsap.to(camera.rotation, {
                 x: 0,
-                y: -.62,
+                y: -.615,
                 z: 0,
-                duration: 2.75
+                duration: 2.25
             })
         }, 650)
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        const delta = clock.getDelta(); // Add delta time
+        // controls.update(delta); // Update controls
+        cameraPosition = camera.position.clone();
+        displayInView = camera.position.x === -4.47 && camera.position.y === 1.435 && camera.position.z === 7.06;
+        console.log(cameraPosition)
+        renderer.render(scene, camera);
     }
 
     onMount(() => {
@@ -110,13 +104,12 @@
 
         camera.position.set(3.98, 4.07, 11.79);
 
+        // controls = new FirstPersonControls(camera, document.body); // Initialize PointerLockControls
+        // scene.add(controls);
         const loader = new GLTFLoader();
         loader.load('src/assets/untitled.glb', (model) => {
             scene.add(model.scene);
             tvUi = model.scene.children.find(child => child.name === "SM_tv_screen_led_");
-
-            tvScreenPosition = tvUi.position.clone();
-
             modelLoadedCallback();
         }, undefined, function (error) {
             console.error('Error loading GLB file:', error);
@@ -170,12 +163,11 @@
     #ui-canvas {
         display: block;
         background: grey;
-        height: 80% !important;
         position: fixed !important;
-        top: 52% !important;
-        bottom: 48%;
-        left: 49.8% !important;
+        height: 90% !important;
+        top: 50% !important;
+        left: 50% !important;
         transform: translate(-50%, -50%);
-        width: 63% !important;
+        width: 80% !important;
     }
 </style>
