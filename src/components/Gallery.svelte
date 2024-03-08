@@ -65,26 +65,11 @@
         guiChanged();
     }
 
-    function positionCanvasOverTv() {
-        if (tvUi && !initialized) {
-            const tvScreenPositionCSS = tvScreenPosition.project(camera);
-            const x = tvScreenPositionCSS.x * window.innerWidth;
-            const y = tvScreenPositionCSS.y * window.innerHeight;
-
-            console.log('tv screen pos: ', tvScreenPositionCSS)
-            const uiCanvas = document.getElementById('ui-canvas');
-
-            if (uiCanvas) {
-                initialized = true;
-            }
-        }
-    }
-
     function animate() {
         requestAnimationFrame(animate);
         cameraPosition = camera.position.clone();
-        displayInView = camera.position.x === -4.57 && camera.position.y === 1.40 && camera.position.z === 7.20;
-        positionCanvasOverTv();
+        displayInView = camera.position.x === -4.53 && camera.position.y === 1.45 && camera.position.z === 7.1;
+        console.log(cameraPosition)
         renderer.render(scene, camera);
     }
 
@@ -97,9 +82,9 @@
     function modelLoadedCallback() {
         setTimeout(() => {
             gsap.to(camera.position, {
-                x: -4.57,
-                y: 1.40,
-                z: 7.2,
+                x: -4.53,
+                y: 1.45,
+                z: 7.1,
                 duration: 2.7
             });
             gsap.to(camera.rotation, {
@@ -173,8 +158,6 @@
             <p> perfect :)</p>
         </div>
     {/if}
-    <p style="color: white; float: left;"> Camera Position: <span
-            style="color: red;"> {positionToString(cameraPosition)}</span></p>
 </div>
 
 <style>
