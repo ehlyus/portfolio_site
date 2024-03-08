@@ -148,12 +148,13 @@
 <div class="gallery-container" bind:this={galleryContainer}>
     {#if displayInView}
         <div id="ui-canvas">
+            <button data-theme="cupcake" class="btn bg-primary">Hello daisyUI</button>
             <p> perfect :)</p>
         </div>
     {/if}
 </div>
 
-<style>
+<style style lang="postcss">
     .gallery-container {
         width: 100%;
         height: 100vh;
