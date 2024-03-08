@@ -56,11 +56,11 @@
             renderer.render(scene, camera);
         }
 
-        const gui = new GUI();
-
-        for (const key in effectController) {
-            gui.add(effectController, key).onChange(guiChanged);
-        }
+        // const gui = new GUI();
+        //
+        // for (const key in effectController) {
+        //     gui.add(effectController, key).onChange(guiChanged);
+        // }
 
         guiChanged();
     }
@@ -68,24 +68,17 @@
     function positionCanvasOverTv() {
         if (tvUi && !initialized) {
             const tvScreenPositionCSS = tvScreenPosition.project(camera);
-            const x = (tvScreenPositionCSS.x + 1) / 2 * window.innerWidth;
-            const y = (-tvScreenPositionCSS.y + 1) / 2 * window.innerHeight;
+            const x = tvScreenPositionCSS.x * window.innerWidth;
+            const y = tvScreenPositionCSS.y * window.innerHeight;
 
+            console.log('tv screen pos: ', tvScreenPositionCSS)
             const uiCanvas = document.getElementById('ui-canvas');
 
             if (uiCanvas) {
-
-                uiCanvas.style.position = 'absolute';
-                uiCanvas.style.left = x + 'px';
-                uiCanvas.style.top = y + 'px';
-                uiCanvas.width = tvScreenWidth * window.innerWidth;
-                uiCanvas.height = tvScreenHeight * window.innerHeight;
-
                 initialized = true;
             }
         }
     }
-
 
     function animate() {
         requestAnimationFrame(animate);
@@ -138,8 +131,6 @@
             tvUi = model.scene.children.find(child => child.name === "SM_tv_screen_led_");
 
             tvScreenPosition = tvUi.position.clone();
-            tvScreenWidth = tvUi.scale.x;
-            tvScreenHeight = tvUi.scale.y;
 
             modelLoadedCallback();
         }, undefined, function (error) {
@@ -196,10 +187,12 @@
     #ui-canvas {
         display: block;
         background: grey;
-        position: absolute !important;
-        top: 103px !important;
-        left: 173.5px !important;
-        width: 1152px !important;
-        height: 695px !important;
+        height: 80% !important;
+        position: fixed !important;
+        top: 52% !important;
+        bottom: 48%;
+        left: 49.8% !important;
+        transform: translate(-50%, -50%);
+        width: 63% !important;
     }
 </style>
