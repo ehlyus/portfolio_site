@@ -149,7 +149,6 @@
     {#if displayInView}
         <div id="ui-canvas">
             <button data-theme="cupcake" class="btn bg-primary">Hello daisyUI</button>
-            <p> perfect :)</p>
         </div>
     {/if}
 </div>
@@ -163,12 +162,20 @@
 
     #ui-canvas {
         display: block;
-        background: grey;
+        background: white;
         position: fixed !important;
         height: 90% !important;
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50%, -50%);
-        width: 80% !important;
+        width: 86% !important;
+        border-radius: 12px;
     }
+
+    @media(max-width: 1265px) {
+        #ui-canvas {
+            width: 95% !important;
+        }
+    }
+
 </style>
