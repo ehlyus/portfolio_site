@@ -1,14 +1,16 @@
 <div class="gallery-container" bind:this={galleryContainer}>
     {#if displayInView}
-        <div id="ui-canvas" data-theme="synthwave" class="hero bg-base-100">
-                <div class="hero-content welcome-content flex-col lg:flex-row-reverse">
-                    <img src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg" class="max-w-lg rounded-lg shadow-2xl" />
-                    <div>
-                        <h1 class="text-5xl font-bold">Welcome!</h1>
-                        <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                        <button data-theme="synthwave" class="btn btn-primary">Get Started</button>
-                    </div>
+        <div id="ui-canvas" data-theme="cupcake" class="hero welcome-container" bind:this={uiCanvas}>
+            <div class="hero-content welcome-content flex-col lg:flex-row-reverse">
+                <img src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"
+                     class="max-w-lg rounded-lg shadow-2xl"/>
+                <div>
+                    <h1 class="text-5xl font-bold">Welcome!</h1>
+                    <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
+                        exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                    <button data-theme="cupcake" class="btn btn-primary">Get Started</button>
                 </div>
+            </div>
         </div>
     {/if}
 </div>
@@ -29,6 +31,7 @@
     let tvUi;
     const clock = new THREE.Clock();
     let displayInView = false;
+    let uiCanvas;
     const positionToString = (position) => {
         return `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}`;
     };
@@ -78,20 +81,32 @@
     }
 
     function modelLoadedCallback() {
-        // setTimeout(() => {
-        //     gsap.to(camera.position, {
-        //         x: -4.47,
-        //         y: 1.435,
-        //         z: 7.06,
-        //         duration: 2.2
-        //     });
-        //     gsap.to(camera.rotation, {
-        //         x: 0,
-        //         y: -.615,
-        //         z: 0,
-        //         duration: 2.25
-        //     })
-        // }, 650)
+        setTimeout(() => {
+            gsap.to(camera.position, {
+                x: -4.44,
+                y: 1.435,
+                z: 7.02,
+                duration: 2.2
+            });
+            gsap.to(camera.rotation, {
+                x: 0,
+                y: -.615,
+                z: 0,
+                duration: 2.25
+            })
+            setTimeout(() => {
+                console.log(uiCanvas)
+
+                // uiCanvas.style.width = '100vw';
+                // uiCanvas.style.height = '100vw';
+                gsap.to(uiCanvas, {
+                    width: "100vw",
+                    height: "100vh",
+                    duration: .05
+                });
+                uiCanvas.style.borderRadius = '0px';
+            }, 2500)
+        }, 650)
     }
 
     function animate() {
@@ -99,7 +114,7 @@
         const delta = clock.getDelta(); // Add delta time
         // controls.update(delta); // Update controls
         cameraPosition = camera.position.clone();
-        displayInView = camera.position.x === -4.47 && camera.position.y === 1.435 && camera.position.z === 7.06;
+        displayInView = camera.position.x === -4.44 && camera.position.y === 1.435 && camera.position.z === 7.02;
         // console.log(cameraPosition)
         renderer.render(scene, camera);
     }
@@ -116,9 +131,9 @@
 
         galleryContainer.appendChild(renderer.domElement);
 
-        // camera.position.set(3.98, 4.07, 11.79);
-        camera.position.set(-4.47, 1.435, 7.06);
-        camera.rotation.set(0, -.615, 0);
+        camera.position.set(3.5, 4.07, 12.79);
+        // camera.position.set(-4.44, 1.435, 7.02);
+        // camera.rotation.set(0, -.615, 0);
 
         // controls = new FirstPersonControls(camera, document.body); // Initialize PointerLockControls
         // scene.add(controls);
@@ -165,6 +180,31 @@
     .welcome-content {
         flex-direction: row !important;
     }
+    .welcome-container {
+        background-image:
+                radial-gradient(circle at 47% 14%,
+                    rgba(205, 205, 205, 0.04) 0%,
+                    rgba(205, 205, 205, 0.04) 43%, transparent 43%, transparent 100%),
+                radial-gradient(circle at 35% 12%,
+                    rgba(215, 215, 215, 0.04) 0%,
+                    rgba(215, 215, 215, 0.04) 4%, transparent 4%, transparent 100%),
+                radial-gradient(circle at 1% 35%,
+                    rgba(24, 24, 24, 0.04) 0%,
+                    rgba(24, 24, 24, 0.04) 37%, transparent 37%, transparent 100%),
+                radial-gradient(circle at 21% 1%,
+                    rgba(0, 0, 0, 0.04) 0%,
+                    rgba(0, 0, 0, 0.04) 26%, transparent 26%, transparent 100%),
+                radial-gradient(circle at 23% 82%,
+                    rgba(249, 249, 249, 0.04) 0%,
+                    rgba(249, 249, 249, 0.04) 60%, transparent 60%, transparent 100%),
+                radial-gradient(circle at 11% 54%,
+                    rgba(251, 251, 251, 0.04) 0%,
+                    rgba(251, 251, 251, 0.04) 23%, transparent 23%, transparent 100%),
+                radial-gradient(circle at 69% 68%,
+                    rgba(234, 234, 234, 0.04) 0%,
+                    rgba(234, 234, 234, 0.04) 10%, transparent 10%, transparent 100%),
+                linear-gradient(90deg, oklch(var(--b1)), oklch(var(--b2)));
+    }
 
     .gallery-container {
         width: 100%;
@@ -175,87 +215,91 @@
     #ui-canvas {
         display: grid;
         position: fixed !important;
-        height: 90% !important;
-        top: 50% !important;
-        left: 50% !important;
+        height: 90%;
+        top: 50%;
+        left: 50%;
         transform: translate(-50%, -50%);
-        width: 30% !important;
+        width: 30%;
         border-radius: 12px;
     }
 
-    @media(max-width: 1400px) {
+    @media (max-width: 1400px) {
         #ui-canvas {
-            width: 95% !important;
+            width: 95%;
         }
     }
 
-    @media(min-width: 1401px) and (max-width: 1600px) {
+    @media (min-width: 1401px) and (max-width: 1600px) {
         #ui-canvas {
-            width: 89% !important;
+            width: 89%;
         }
     }
+
     /*@media(min-width: 1481px) and (max-width: 1620px) {*/
     /*    #ui-canvas {*/
     /*        width: 85% !important;*/
     /*    }*/
     /*}*/
-    @media(min-width: 1601px) and (max-width: 1660px) {
+    @media (min-width: 1601px) and (max-width: 1660px) {
         #ui-canvas {
-            width: 86% !important;
-        }
-    }
-    @media(min-width: 1661px) and (max-width: 1770px) {
-        #ui-canvas {
-            width: 80% !important;
-        }
-    }
-    @media(min-width: 1770px) and (max-width: 1830px) {
-        #ui-canvas {
-            width: 79% !important;
-        }
-    }
-    @media(min-width: 1830px) and (max-width: 1870px) {
-        #ui-canvas {
-            width: 77% !important;
-        }
-    }
-    @media(min-width: 1871px) and (max-width: 1940px) {
-        #ui-canvas {
-            width: 75% !important;
-        }
-    }
-    @media(min-width: 1941px) and (max-width: 1990px) {
-        #ui-canvas {
-            width: 73% !important;
-        }
-    }
-    @media(min-width: 1991px) and (max-width: 2050px) {
-        #ui-canvas {
-            width: 71% !important;
-        }
-    }
-    @media(min-width: 2051px) and (max-width: 2100px) {
-        #ui-canvas {
-            width: 69% !important;
-        }
-    }
-    @media(min-width: 2101px) and (max-width: 2230px) {
-        #ui-canvas {
-            width: 65% !important;
-        }
-    }
-    @media(min-width: 2231px) and (max-width: 2350px) {
-        #ui-canvas {
-            width: 62% !important;
-        }
-    }
-    @media(min-width: 2351px) and (max-width: 2400px) {
-        #ui-canvas {
-            width: 60% !important;
+            width: 86%;
         }
     }
 
+    @media (min-width: 1661px) and (max-width: 1770px) {
+        #ui-canvas {
+            width: 80%;
+        }
+    }
 
+    @media (min-width: 1770px) and (max-width: 1830px) {
+        #ui-canvas {
+            width: 79%;
+        }
+    }
+
+    @media (min-width: 1830px) and (max-width: 1920px) {
+        #ui-canvas {
+            width: 77%;
+            height: 97%;
+        }
+    }
+
+    @media (min-width: 1941px) and (max-width: 1990px) {
+        #ui-canvas {
+            width: 73%;
+        }
+    }
+
+    @media (min-width: 1991px) and (max-width: 2050px) {
+        #ui-canvas {
+            width: 71%;
+        }
+    }
+
+    @media (min-width: 2051px) and (max-width: 2100px) {
+        #ui-canvas {
+            width: 69%;
+        }
+    }
+
+    @media (min-width: 2101px) and (max-width: 2230px) {
+        #ui-canvas {
+            width: 65%;
+        }
+    }
+
+    @media (min-width: 2231px) and (max-width: 2350px) {
+        #ui-canvas {
+            width: 62%;
+        }
+    }
+
+    @media (min-width: 2351px) and (max-width: 2400px) {
+        #ui-canvas {
+            width: 60%;
+        }
+    }
 
 
 </style>
