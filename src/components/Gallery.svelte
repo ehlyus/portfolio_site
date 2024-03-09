@@ -95,14 +95,10 @@
                 duration: 2.25
             })
             setTimeout(() => {
-                console.log(uiCanvas)
-
-                // uiCanvas.style.width = '100vw';
-                // uiCanvas.style.height = '100vw';
                 gsap.to(uiCanvas, {
                     width: "100vw",
                     height: "100vh",
-                    duration: .05
+                    duration: .40
                 });
                 uiCanvas.style.borderRadius = '0px';
             }, 2500)
@@ -131,9 +127,9 @@
 
         galleryContainer.appendChild(renderer.domElement);
 
-        camera.position.set(3.5, 4.07, 12.79);
+        camera.position.set(3.5, 3.07, 12.79);
         // camera.position.set(-4.44, 1.435, 7.02);
-        // camera.rotation.set(0, -.615, 0);
+        camera.rotation.set(0, .2, 0);
 
         // controls = new FirstPersonControls(camera, document.body); // Initialize PointerLockControls
         // scene.add(controls);
