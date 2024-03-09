@@ -1,3 +1,17 @@
+<div class="gallery-container" bind:this={galleryContainer}>
+    {#if displayInView}
+        <div id="ui-canvas" data-theme="synthwave" class="hero bg-base-100">
+                <div class="hero-content welcome-content flex-col lg:flex-row-reverse">
+                    <img src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg" class="max-w-lg rounded-lg shadow-2xl" />
+                    <div>
+                        <h1 class="text-5xl font-bold">Welcome!</h1>
+                        <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                        <button data-theme="synthwave" class="btn btn-primary">Get Started</button>
+                    </div>
+                </div>
+        </div>
+    {/if}
+</div>
 <script lang="ts">
     // @ts-nocheck
     import {onMount} from 'svelte';
@@ -64,20 +78,20 @@
     }
 
     function modelLoadedCallback() {
-        setTimeout(() => {
-            gsap.to(camera.position, {
-                x: -4.47,
-                y: 1.435,
-                z: 7.06,
-                duration: 2.2
-            });
-            gsap.to(camera.rotation, {
-                x: 0,
-                y: -.615,
-                z: 0,
-                duration: 2.25
-            })
-        }, 650)
+        // setTimeout(() => {
+        //     gsap.to(camera.position, {
+        //         x: -4.47,
+        //         y: 1.435,
+        //         z: 7.06,
+        //         duration: 2.2
+        //     });
+        //     gsap.to(camera.rotation, {
+        //         x: 0,
+        //         y: -.615,
+        //         z: 0,
+        //         duration: 2.25
+        //     })
+        // }, 650)
     }
 
     function animate() {
@@ -86,7 +100,7 @@
         // controls.update(delta); // Update controls
         cameraPosition = camera.position.clone();
         displayInView = camera.position.x === -4.47 && camera.position.y === 1.435 && camera.position.z === 7.06;
-        console.log(cameraPosition)
+        // console.log(cameraPosition)
         renderer.render(scene, camera);
     }
 
@@ -102,7 +116,9 @@
 
         galleryContainer.appendChild(renderer.domElement);
 
-        camera.position.set(3.98, 4.07, 11.79);
+        // camera.position.set(3.98, 4.07, 11.79);
+        camera.position.set(-4.47, 1.435, 7.06);
+        camera.rotation.set(0, -.615, 0);
 
         // controls = new FirstPersonControls(camera, document.body); // Initialize PointerLockControls
         // scene.add(controls);
@@ -145,37 +161,101 @@
     });
 </script>
 
-<div class="gallery-container" bind:this={galleryContainer}>
-    {#if displayInView}
-        <div id="ui-canvas">
-            <button data-theme="cupcake" class="btn bg-primary">Hello daisyUI</button>
-        </div>
-    {/if}
-</div>
-
 <style style lang="postcss">
+    .welcome-content {
+        flex-direction: row !important;
+    }
+
     .gallery-container {
         width: 100%;
-        height: 100vh;
+        height: 100%;
         position: relative;
     }
 
     #ui-canvas {
-        display: block;
-        background: white;
+        display: grid;
         position: fixed !important;
         height: 90% !important;
         top: 50% !important;
         left: 50% !important;
         transform: translate(-50%, -50%);
-        width: 86% !important;
+        width: 30% !important;
         border-radius: 12px;
     }
 
-    @media(max-width: 1265px) {
+    @media(max-width: 1400px) {
         #ui-canvas {
             width: 95% !important;
         }
     }
+
+    @media(min-width: 1401px) and (max-width: 1600px) {
+        #ui-canvas {
+            width: 89% !important;
+        }
+    }
+    /*@media(min-width: 1481px) and (max-width: 1620px) {*/
+    /*    #ui-canvas {*/
+    /*        width: 85% !important;*/
+    /*    }*/
+    /*}*/
+    @media(min-width: 1601px) and (max-width: 1660px) {
+        #ui-canvas {
+            width: 86% !important;
+        }
+    }
+    @media(min-width: 1661px) and (max-width: 1770px) {
+        #ui-canvas {
+            width: 80% !important;
+        }
+    }
+    @media(min-width: 1770px) and (max-width: 1830px) {
+        #ui-canvas {
+            width: 79% !important;
+        }
+    }
+    @media(min-width: 1830px) and (max-width: 1870px) {
+        #ui-canvas {
+            width: 77% !important;
+        }
+    }
+    @media(min-width: 1871px) and (max-width: 1940px) {
+        #ui-canvas {
+            width: 75% !important;
+        }
+    }
+    @media(min-width: 1941px) and (max-width: 1990px) {
+        #ui-canvas {
+            width: 73% !important;
+        }
+    }
+    @media(min-width: 1991px) and (max-width: 2050px) {
+        #ui-canvas {
+            width: 71% !important;
+        }
+    }
+    @media(min-width: 2051px) and (max-width: 2100px) {
+        #ui-canvas {
+            width: 69% !important;
+        }
+    }
+    @media(min-width: 2101px) and (max-width: 2230px) {
+        #ui-canvas {
+            width: 65% !important;
+        }
+    }
+    @media(min-width: 2231px) and (max-width: 2350px) {
+        #ui-canvas {
+            width: 62% !important;
+        }
+    }
+    @media(min-width: 2351px) and (max-width: 2400px) {
+        #ui-canvas {
+            width: 60% !important;
+        }
+    }
+
+
+
 
 </style>
