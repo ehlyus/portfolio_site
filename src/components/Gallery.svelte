@@ -2,7 +2,7 @@
     {#if displayInView}
         <div id="ui-canvas" data-theme="cupcake" class="hero welcome-container" bind:this={uiCanvas}>
             <div class="hero-content welcome-content flex-col lg:flex-row-reverse">
-                <img src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"
+                <img alt="none" src="https://daisyui.com/images/stock/photo-1635805737707-575885ab0820.jpg"
                      class="max-w-lg rounded-lg shadow-2xl"/>
                 <div>
                     <h1 class="text-5xl font-bold">Welcome!</h1>
@@ -14,6 +14,7 @@
         </div>
     {/if}
 </div>
+
 <script lang="ts">
     // @ts-nocheck
     import {onMount} from 'svelte';
@@ -98,10 +99,10 @@
                 gsap.to(uiCanvas, {
                     width: "100vw",
                     height: "100vh",
-                    duration: .40
+                    duration: .35
                 });
                 uiCanvas.style.borderRadius = '0px';
-            }, 2500)
+            }, 2300)
         }, 650)
     }
 
