@@ -6,8 +6,7 @@
                      class="max-w-lg rounded-lg shadow-2xl"/>
                 <div>
                     <h1 class="text-5xl font-bold">Welcome!</h1>
-                    <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi
-                        exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                    <p class="py-6">Hello! I'm Elijah Johnson; a Senior Software Engineer, Product Designer and Technical Founder.</p>
                     <button data-theme="cupcake" class="btn btn-primary">Get Started</button>
                 </div>
             </div>
@@ -99,10 +98,10 @@
                 gsap.to(uiCanvas, {
                     width: "100vw",
                     height: "100vh",
-                    duration: .35
+                    duration: .4
                 });
                 uiCanvas.style.borderRadius = '0px';
-            }, 2300)
+            }, 2350)
         }, 650)
     }
 
