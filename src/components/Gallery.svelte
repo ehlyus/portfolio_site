@@ -6,7 +6,7 @@
                      class="max-w-lg rounded-lg shadow-2xl"/>
                 <div>
                     <h1 class="text-5xl font-bold">Welcome!</h1>
-                    <p class="py-6">Hello! I'm Elijah Johnson; a Senior Software Engineer, Product Designer and Technical Founder.</p>
+                    <p class="py-6">I'm Elijah Johnson; a Senior Software Engineer, Product Designer and Technical Founder.</p>
                     <button data-theme="cupcake" class="btn btn-primary">Get Started</button>
                 </div>
             </div>
@@ -32,9 +32,6 @@
     const clock = new THREE.Clock();
     let displayInView = false;
     let uiCanvas;
-    const positionToString = (position) => {
-        return `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}`;
-    };
 
     function initSky() {
         sky = new Sky();
@@ -74,11 +71,46 @@
         guiChanged();
     }
 
+    function initShadows(scene, renderer) {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
+        dirLight.position.set(5, 10, 5);
+        dirLight.castShadow = true;
+        scene.add(dirLight);
+
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.camera.near = 0.1;
+        dirLight.shadow.camera.far = 50;
+
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    }
+
+    function loadModel(scene) {
+        const loader = new GLTFLoader();
+        loader.load('src/assets/untitled.glb', (model) => {
+            scene.add(model.scene);
+            tvUi = model.scene.children.find(child => child.name === "SM_tv_screen_led_");
+            modelLoadedCallback();
+        }, undefined, function (error) {
+            console.error('Error loading GLB file:', error);
+        });
+    }
+
     function handleResize() {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     }
+
+    const positionToString = (position) => {
+        return `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2)}, z: ${position.z.toFixed(2)}`;
+    };
 
     function modelLoadedCallback() {
         setTimeout(() => {
@@ -108,14 +140,12 @@
     function animate() {
         requestAnimationFrame(animate);
         const delta = clock.getDelta(); // Add delta time
-        // controls.update(delta); // Update controls
         cameraPosition = camera.position.clone();
         displayInView = camera.position.x === -4.44 && camera.position.y === 1.435 && camera.position.z === 7.02;
-        // console.log(cameraPosition)
         renderer.render(scene, camera);
     }
 
-    onMount(() => {
+    function initScene() {
         renderer = new THREE.WebGLRenderer({antialias: true});
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
@@ -124,48 +154,18 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         displayInView = true;
-
         galleryContainer.appendChild(renderer.domElement);
-
         camera.position.set(3.5, 3.07, 12.79);
-        // camera.position.set(-4.44, 1.435, 7.02);
         camera.rotation.set(0, .2, 0);
-
-        // controls = new FirstPersonControls(camera, document.body); // Initialize PointerLockControls
-        // scene.add(controls);
-        const loader = new GLTFLoader();
-        loader.load('src/assets/untitled.glb', (model) => {
-            scene.add(model.scene);
-            tvUi = model.scene.children.find(child => child.name === "SM_tv_screen_led_");
-            modelLoadedCallback();
-        }, undefined, function (error) {
-            console.error('Error loading GLB file:', error);
-        });
-
-        const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-        scene.add(ambientLight);
-
-        const dirLight = new THREE.DirectionalLight(0xffffff, 2);
-        dirLight.position.set(5, 10, 5);
-        dirLight.castShadow = true;
-        scene.add(dirLight);
-
-        dirLight.shadow.mapSize.width = 2048;
-        dirLight.shadow.mapSize.height = 2048;
-        dirLight.shadow.camera.near = 0.1;
-        dirLight.shadow.camera.far = 50;
-
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-
+        loadModel(scene);
+        initShadows(scene, renderer);
         initSky();
-
         animate();
+    }
 
+    onMount(() => {
+        initScene();
         window.addEventListener('resize', handleResize);
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
